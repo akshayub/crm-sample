@@ -7,3 +7,4 @@
 *.iml
 *.py[co]
 migrations/
+crm/config.py
