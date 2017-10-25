@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 
 # Create your views here.
@@ -11,6 +11,8 @@ def index(request):
 
 
 def login_user(request):
+    if request.user.is_authenticated:
+        return redirect('web:index')
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
@@ -18,7 +20,7 @@ def login_user(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return render(request, 'web/home.html')
+                return redirect('web:index')
             else:
                 return render(request, 'web/login.html', {'error_message': 'Your account has been disabled'})
         else:

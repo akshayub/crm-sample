@@ -1,0 +1,14 @@
+
+@font-face {
+    font-family: 'satisfyregular';
+    src: url('../fonts/satisfy-regular-webfont.woff2') format('woff2'),
+         url('../fonts/satisfy-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.navbar-brand {
+    font-family: 'satisfyregular';
+    font-weight: normal;
+    font-style: normal;
+}
