@@ -18,4 +18,8 @@ is configured.
 - In case the above step fails, do the following to resolve
 mySQL error: `sudo apt-get install libmysqlclient-dev`
 - Apply migrations. `python3 manage.py migrate`
+- Create a database in MySQL server with name : `crmdb`
+- Create a `config.py` file from the example file and update the
+MySQL username and password.
+- Make migrations. `python manage.py migrate`
 - Run the server. `python manage.py runserver`
