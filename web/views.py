@@ -31,3 +31,7 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return render(request, 'web/login.html')
+
+
+def compare(request):
+    return render(request, 'web/compare.html')
