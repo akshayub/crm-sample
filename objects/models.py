@@ -1,147 +1,152 @@
 from django.db import models
 from django.core.validators import RegexValidator
-# Create your models here.
 
+
+# Create your models here.
 class Owner(models.Model):
-    Owner_Name = models.CharField(max_length=250)
-    Owner_Email = models.EmailField()
-    Owner_BDate = models.DateField()
-    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey('auth.User')
+    bdate = models.DateField()
 
     def __str__(self):
-        return str(self.id)+ " - " + self.Owner_Name
+        return str(self.id) + " - " + self.user.first_name + " " + self.user.last_name
 
 
 class Lead(models.Model):
-    Owned_By = models.ForeignKey(Owner , on_delete=models.CASCADE)
-    Name =  models.CharField(max_length=250)
-    Address =  models.CharField(max_length=250)
-    Company = models.CharField(max_length=250)
-    Email =  models.EmailField()
-    Status = models.CharField(max_length=250)
-    Added_On = models.DateField()
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    name = models.CharField(max_length=250)
+    address = models.CharField(max_length=250)
+    company = models.CharField(max_length=250)
+    email = models.EmailField()
+    status = models.CharField(max_length=250)
+    added_on = models.DateField()
 
     def __str__(self):
-        return str(self.id)+ " - " + self.Name
+        return str(self.id) + " - " + self.name
 
 
 class Account(models.Model):
-    Name =  models.CharField(max_length=250)
-    Website = models.CharField(max_length=250)
+    name = models.CharField(max_length=250)
+    website = models.CharField(max_length=250)
+    phone_regex = RegexValidator(
+        regex=r'^\+?1?\d{9,15}$',
+        message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
+    )
 
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
-                                 message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    Phone_Number = models.CharField(validators=[phone_regex], max_length=15,
-                                    blank=True )  # validators should be a list
-    Owned_By = models.ForeignKey(Owner , on_delete=models.CASCADE)
-    Added_On = models.DateField()
+    # validators should be a list
+    phone_number = models.CharField(
+        validators=[phone_regex],
+        max_length=15,
+        blank=True
+    )
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    added_on = models.DateField()
 
-    #Recursive relationship
-    #https://stackoverflow.com/questions/18271001/django-recursive-relationship
+    # Recursive relationship
+    # https://stackoverflow.com/questions/18271001/django-recursive-relationship
 
-    Subsidiary_Of = models.OneToOneField('self' , null=True , blank=True)
+    subsidiary_of = models.OneToOneField('self', null=True, blank=True)
 
-    def save(self, check = True, *args, **kwargs):
+    def save(self, check=True, *args, **kwargs):
         super(Account, self).save()
-        if self.Subsidiary_Of and check:
-            self.Subsidiary_Of.Subsidiary_Of = self
-            self.Subsidiary_Of.save(check= False)
+        if self.subsidiary_of and check:
+            self.subsidiary_of.subsidiary_of = self
+            self.subsidiary_of.save(check=False)
 
     def __str__(self):
-        return str(self.id)+ " - " + self.Name
+        return str(self.id) + " - " + self.name
 
 
-class Account_Location(models.Model):
-    Acc_id = models.ForeignKey(Account , on_delete = models.CASCADE)
-    Place = models.CharField(max_length = 250)
-
-
+class AccountLocation(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    place = models.CharField(max_length=250)
 
 
 class Note(models.Model):
-    Title = models.CharField(max_length = 200)
-    Description = models.CharField(max_length = 200)
+    title = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
 
     def __str__(self):
-        return str(self.id)+ " - " + self.Title
+        return str(self.id) + " - " + self.title
+
 
 class Attachment(models.Model):
-    Note_Id = models.ForeignKey(Note , on_delete=models.CASCADE)
-    Attached_To_Acc = models.ForeignKey(Account , on_delete=models.CASCADE)
+    note = models.ForeignKey(Note, on_delete=models.CASCADE)
+    attached_to_acc = models.ForeignKey(Account, on_delete=models.CASCADE)
+
 
 class Contact(models.Model):
-    Name = models.CharField(max_length=250)
-    Address = models.CharField(max_length=250)
-    Email = models.EmailField()
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
-                                 message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    Phone_Number = models.CharField(validators=[phone_regex], max_length=15,
-                                    blank=True)  # validators should be a list
+    name = models.CharField(max_length=250)
+    address = models.CharField(max_length=250)
+    email = models.EmailField()
+    phone_regex = RegexValidator(
+        regex=r'^\+?1?\d{9,15}$',
+        message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
+    )
 
-    Birth_Date = models.DateField()
+    # validators should be a list
+    phone_number = models.CharField(
+        validators=[phone_regex],
+        max_length=15,
+        blank=True
+    )
 
-    Added_By = models.ForeignKey(Owner , on_delete=models.CASCADE)
-
-    Added_On = models.DateField()
+    bdate = models.DateField()
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    added_on = models.DateField()
+    works_for = models.ForeignKey(Account, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.id)+ " - " + self.Name
+        return str(self.id) + " - " + self.name
 
-
-class WorksIn(models.Model):
-    Contact_Id = models.ForeignKey(Contact , on_delete=models.CASCADE)
-    Account_Id = models.ForeignKey( Account, on_delete=models.CASCADE)
 
 class Opportunity(models.Model):
-    Name = models.CharField(max_length=200)
-    Stage = models.CharField(max_length=200)
-    Close_Date = models.DateField()
-    probability = models.IntegerField();
-    Description = models.CharField(max_length=1000)
-    Owned_By = models.ForeignKey(Owner , on_delete=models.CASCADE)
-    Account_Number = models.ForeignKey(Account , on_delete=models.CASCADE)
-
+    name = models.CharField(max_length=200)
+    stage = models.CharField(max_length=200)
+    close_date = models.DateField()
+    probability = models.IntegerField()
+    description = models.CharField(max_length=1000)
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.id)+ " - " + self.Name
-
+        return str(self.id) + " - " + self.name
 
 
 class Product(models.Model):
-    Name =  models.CharField(max_length=200)
-
+    name = models.CharField(max_length=200)
 
     def __str__(self):
-        return str(self.id)+ " - " + self.Name
-
+        return str(self.id) + " - " + self.name
 
 
 class Case(models.Model):
-    Title = models.CharField(max_length = 200)
-    Description = models.CharField(max_length=1000)
-    Resolve_Date = models.DateField()
+    title = models.CharField(max_length=200)
+    description = models.CharField(max_length=1000)
+    resolve_date = models.DateField()
+    resolved = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.id)+ " - " + self.Title
+        return str(self.id) + " - " + self.title
 
 
 class Problem(models.Model):
-    Case_Id = models.ForeignKey(Case , on_delete=models.CASCADE)
-    Product_Id = models.ForeignKey(Product , on_delete=models.CASCADE)
-    Account_Id = models.ForeignKey(Account , on_delete=models.CASCADE)
-    Owner_Id = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    Issue_Date = models.DateField()
+    case = models.ForeignKey(Case, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    issue_date = models.DateField()
 
     def __str__(self):
-        return str(self.id)+ " Issued on " + str(self.Issue_Date)
+        return str(self.case) + "Issued on " + str(self.issue_date)
+
 
 class Component(models.Model):
-    Name = models.CharField(max_length=200)
-    Product_Id = models.ForeignKey(Product, on_delete=models.CASCADE)
     id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('id', 'Product_Id')
+        unique_together = ('id', 'product')
 
     def __str__(self):
-        return str(self.id)+ " - " + str(self.Product_Id) + " - " + str(self.Name)
+        return str(self.id) + " - " + str(self.product) + " - " + str(self.name)
