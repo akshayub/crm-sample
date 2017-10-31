@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'^login_user/$', views.login_user, name='login_user'),
     url(r'^logout/$', views.logout_user, name='logout_user'),
     url(r'^compare/$', views.compare, name='compare'),
-    url(r'^chart/$', views.chart1, name='chart')
+    url(r'^chart1/$', views.chart1, name='chart1'),
+    url(r'^chart2/$', views.chart2, name='chart2')
 ]

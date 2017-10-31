@@ -15,16 +15,15 @@
 
     <div class="container-fluid">
         <div class="row justify-content-between">
-            <div class="col-md-4">
-                {# #HACK! I have set the min-width as 20rem #}
+            <div class="col-sm-4">
                 <div class="card">
                     <canvas id="serverspeed" width="100%"></canvas>
                     <div class="card-body">
-                        <p class="card-text">The comparison of transfer speed between JSON and XML (dummy data)</p>
+                        <p class="card-text">The comparison of transfer speed between JSON and XML</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-sm-4">
                 <div class="card">
                     <img class="card-img-top" src="{% static 'img/2.jpg' %}" alt="Taxi!">
                     <div class="card-body">
@@ -32,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-sm-4">
                 <div class="card">
                     <img class="card-img-top" src="{% static 'img/3.jpg' %}" alt="Buildings!">
                     <div class="card-body">
@@ -45,9 +44,9 @@
 
     <script>
         window.onload = function () {
-            chart1();
+            updateChart(chart1);
+            updateChart(chart2);
         }
-
     </script>
 
 {% endblock %}
