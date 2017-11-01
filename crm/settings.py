@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import pymysql
+pymysql.install_as_MySQLdb()
+
 try:
     from . import config
 except ImportError:
