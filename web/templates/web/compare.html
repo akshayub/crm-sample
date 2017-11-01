@@ -33,9 +33,9 @@
             </div>
             <div class="col-md-4">
                 <div class="card">
-                    <img class="card-img-top" src="{% static 'img/3.jpg' %}" alt="Buildings!">
+                    <canvas id="datasize" width="100%" height="100%"></canvas>
                     <div class="card-body">
-                        <p class="card-text">Streets in USA</p>
+                        <p class="card-text">Data size of the JSON and XML objects</p>
                     </div>
                 </div>
             </div>
@@ -46,6 +46,7 @@
         window.onload = function () {
             updateChart(chart1);
             updateChart(chart2);
+            updateChart(chart3);
         }
     </script>
 
