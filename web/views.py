@@ -42,7 +42,7 @@ def compare(request):
 
 def chart1(request):
     """
-    This function is for returning data for AJAX call.
+    This view tests the server speed for transferring JSON and XML objects.
 
     :param request: The AJAX request
     :return: JsonResponse of the dataset.
@@ -97,6 +97,11 @@ def chart1(request):
 
 
 def chart2(request):
+    """
+    This view returns the JSON and XML test data for client resolving test
+    :param request: The AJAX request
+    :return: JsonResponse of the JSON and XML
+    """
     full_url = HttpRequest.build_absolute_uri(request)
     relative = HttpRequest.get_full_path(request)
 
@@ -110,6 +115,29 @@ def chart2(request):
     for x in request_amount:
         json_content.append(requests.get(base_url + reverse('objects:leads_json', args=[x])).text)
         xml_content.append(requests.get(base_url + reverse('objects:leads_xml', args=[x])).text)
+
+    response = {
+        'json': json_content,
+        'xml': xml_content
+    }
+
+    return JsonResponse(response)
+
+
+def chart3(request):
+    full_url = HttpRequest.build_absolute_uri(request)
+    relative = HttpRequest.get_full_path(request)
+
+    base_url = full_url[:-len(relative)]
+
+    request_amount = ['10', '100', '200', '500', '1000']
+
+    json_content = list()
+    xml_content = list()
+
+    for x in request_amount:
+        json_content.append(len(requests.get(base_url + reverse('objects:leads_json', args=[x])).text)/1024)
+        xml_content.append(len(requests.get(base_url + reverse('objects:leads_xml', args=[x])).text)/1024)
 
     response = {
         'json': json_content,

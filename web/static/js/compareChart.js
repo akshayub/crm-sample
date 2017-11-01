@@ -152,7 +152,65 @@ function chart2(response) {
             }
         }
     });
-
 }
 
 
+function chart3(response) {
+    var data = JSON.parse(response);
+    var json_data = data['json'];
+    var xml_data = data['xml'];
+
+    var dataset = {
+        labels: [10, 100, 200, 500, 1000],
+        datasets: [
+            {
+                label: 'JSON',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255,99,132,1)',
+                data: json_data,
+                borderWidth: 2,
+                yAxisID: 'first-y-axis'
+            },
+            {
+                label: 'XML',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                data: xml_data,
+                borderWidth: 2,
+                yAxisID: 'first-y-axis'
+            }
+        ]
+    };
+
+    var ctx = document.getElementById("datasize").getContext('2d');
+    var serverspeed = new Chart(ctx, {
+        type: 'bar',
+        data: dataset,
+        options: {
+            scales: {
+                yAxes: [{
+                    id: 'first-y-axis',
+                    type: 'linear',
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Size in kilobytes'
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'No. of objects'
+                    }
+                }]
+            },
+            responsive: true,
+            legend: {
+                position: 'top'
+            },
+            title: {
+                display: true,
+                text: 'Data size'
+            }
+        }
+    });
+}
