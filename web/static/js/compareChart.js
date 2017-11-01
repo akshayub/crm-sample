@@ -48,7 +48,7 @@ function chart1(response) {
             },
             title: {
                 display: true,
-                text: 'XML vs JSON'
+                text: 'Data transfer speed'
             }
         }
     });
@@ -78,15 +78,80 @@ function chart2(response) {
         json_time.push(total);
     }
 
-    console.log(json_time);
+    var parser = new DOMParser();
 
-    // var parser = new DOMParser();
-    //
-    // for (var xitem in xml_data) {
-    //     var sTime = new Date().getMilliseconds();
-    //     var xmlDoc = parser.parseFromString(xml_data[xitem], "text/xml");
-    //
-    // }
+    for (var xitem in xml_data) {
+        var sTime = new Date().getMilliseconds();
+        var xmlText = xml_data[xitem];
+        var xdoc = parser.parseFromString(xmlText, "text/xml");
+        var objs = xdoc.getElementsByTagName("object");
+        for (var count = 0; count < objs.length; count++) {
+            var xmlobj = objs[count];
+            var fields = xmlobj.childNodes;
+            var xmlname = fields[1].innerHTML;
+            var xmlemail = fields[4].innerHTML;
+            var xmladdress = fields[2].innerHTML;
+            var xmlstatus = fields[5].innerHTML;
+        }
+        var eTime = new Date().getMilliseconds();
+        total = eTime - sTime;
+        xml_time.push(total);
+    }
+
+    var dataset = {
+        labels: [10, 100, 200, 500, 1000],
+        datasets: [
+            {
+                label: 'JSON',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255,99,132,1)',
+                data: json_time,
+                borderWidth: 2,
+                yAxisID: 'first-y-axis'
+            },
+            {
+                label: 'XML',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                data: xml_time,
+                borderWidth: 2,
+                yAxisID: 'first-y-axis'
+            }
+        ]
+    };
+
+
+    var ctx = document.getElementById("clientresolve").getContext('2d');
+    var clientResolve = new Chart(ctx, {
+        type: 'bar',
+        data: dataset,
+        options: {
+            scales: {
+                yAxes: [{
+                    id: 'first-y-axis',
+                    type: 'linear',
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time in milliseconds'
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'No. of objects resolved'
+                    }
+                }]
+            },
+            responsive: true,
+            legend: {
+                position: 'top'
+            },
+            title: {
+                display: true,
+                text: 'Client Resolving Speed'
+            }
+        }
+    });
 
 }
 
