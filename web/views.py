@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpRequest, JsonResponse
-import json
+import time
 import requests
 
 
@@ -70,10 +70,16 @@ def chart1(request):
     xml_data = list()
 
     for x in json_urls:
-        json_data.append(requests.get(base_url + x).elapsed.microseconds/1000)
+        start = time.perf_counter()
+        req = requests.get(base_url + x)
+        end = time.perf_counter()
+        json_data.append((end - start))
 
     for x in xml_urls:
-        xml_data.append(requests.get(base_url + x).elapsed.microseconds/1000)
+        start = time.perf_counter()
+        req = requests.get(base_url + x)
+        end = time.perf_counter()
+        xml_data.append((end - start))
 
     final_data = {
         'labels': request_amount,

@@ -32,7 +32,7 @@ function chart1(response) {
                     type: 'linear',
                     scaleLabel: {
                         display: true,
-                        labelString: 'Time in milliseconds'
+                        labelString: 'Time in seconds'
                     }
                 }],
                 xAxes: [{
