@@ -70,16 +70,22 @@ def chart1(request):
     xml_data = list()
 
     for x in json_urls:
-        start = time.perf_counter()
-        req = requests.get(base_url + x)
-        end = time.perf_counter()
-        json_data.append((end - start))
+        json_average=0
+        for i in range (0,5):
+            start = time.perf_counter()
+            req = requests.get(base_url + x)
+            end = time.perf_counter()
+            json_average += (end-start)
+        json_data.append((json_average)/5)
 
     for x in xml_urls:
-        start = time.perf_counter()
-        req = requests.get(base_url + x)
-        end = time.perf_counter()
-        xml_data.append((end - start))
+        xml_average=0
+        for i in range(0,5):
+            start = time.perf_counter()
+            req = requests.get(base_url + x)
+            end = time.perf_counter()
+            xml_average+=(end-start)
+        xml_data.append((xml_average)/5)
 
     final_data = {
         'labels': request_amount,
