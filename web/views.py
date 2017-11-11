@@ -76,7 +76,7 @@ def chart1(request):
             req = requests.get(base_url + x)
             end = time.perf_counter()
             json_average += (end-start)
-        json_data.append(json_average)
+        json_data.append((json_average)/5)
 
     for x in xml_urls:
         xml_average=0
@@ -85,7 +85,7 @@ def chart1(request):
             req = requests.get(base_url + x)
             end = time.perf_counter()
             xml_average+=(end-start)
-        xml_data.append(xml_average)
+        xml_data.append((xml_average)/5)
 
     final_data = {
         'labels': request_amount,
