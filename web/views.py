@@ -40,6 +40,10 @@ def compare(request):
     return render(request, 'web/compare.html')
 
 
+def accounts(request):
+    return render(request, 'web/accounts.html')
+
+
 def chart1(request):
     """
     This view tests the server speed for transferring JSON and XML objects.
