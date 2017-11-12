@@ -27,9 +27,19 @@
                 <li class="nav-item active">
                     <a class="nav-link {% block account_active %}{% endblock %}" href="{% url 'web:accounts' %}">Accounts</a>
                 </li>
+                <li class="nav-item active">
+                    <a class="nav-link {% block contact_active %}{% endblock %}" href="{% url 'web:contacts' %}">Contacts</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link {% block lead_active %}{% endblock %}" href="{% url 'web:leads' %}">Leads</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link {% block opportunity_active %}{% endblock %}" href="{% url 'web:opportunities' %}">Opportunities</a>
+                </li>
             </ul>
             <ul class="nav-pills navbar-nav mr-auto"></ul>
             <ul class="nav-pills navbar-nav">
+                {# A search bar is coming here.. #}
                 <li class="nav-item">
                     {# So many hacks for this #}
                     <div style="color: white; display: table;">

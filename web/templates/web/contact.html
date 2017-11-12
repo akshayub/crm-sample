@@ -1,0 +1,27 @@
+{% extends 'web/base.html' %}
+{% block title %}Contact Details{% endblock %}
+{% block contact_active %}active{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="card" style="margin-top: 1em">
+                    {% if error_message %}
+                        <h5>Error!</h5>
+                        <p>{{ error_message }}</p>
+                    {% endif %}
+                    <h3>&nbsp;&nbsp;{{ name }}</h3>
+                    <div class="card-body">
+                        Address: {{ address }}<br>
+                        Email: <a href="mailto:{{ email }}">{{ email }}</a><br>
+                        Phone: {{ phone }}<br>
+                        Birth Date: {{ bdate }}<br>
+                        Works for: <a href="{% url 'web:account' works_for.id %}">{{ works_for.name }}</a><br>
+                        Added On: {{ added_on }}<br>
+                        Added By: {{ owner.user.last_name }}<br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
