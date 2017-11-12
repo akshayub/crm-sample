@@ -1,0 +1,71 @@
+{% extends 'web/base.html' %}
+{% block title %}Accounts{% endblock %}
+{% block account_active %}active{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="card" style="margin-top: 1em">
+                    {% if error_message %}
+                        <h5>Error!</h5>
+                        <p>{{ error_message }}</p>
+                    {% endif %}
+                    <h3>&nbsp;&nbsp;{{ name }}</h3>
+                    <div class="card-body">
+                        Phone: {{ phone }}<br>
+                        Website: <a href="{{ website }}">{{ website }}</a><br>
+                        {% if parent != None %}
+                            Parent: <a href="/accounts/{{ parent.id }}">{{ parent.name }}</a>
+                        {% endif %}
+                        {% if locations != None %}
+                            Locations: <br>
+                            <ul>
+                            {% for loc in locations %}
+                                <li>{{ loc.place }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                {% if not error_message %}
+                    <div class="card" style="margin-top: 1em">
+                        <h3>&nbsp;&nbsp;Contacts</h3>
+                        <div class="card-body">
+                            {% if not contacts %}
+                                <p>No contacts found for this company. Add one now.</p>
+                            {% else %}
+                                {% for obj in contacts %}
+                                    Name: <a href="{% url 'web:contact' obj.id %}">{{ obj.name }}</a><br>
+                                    Phone: {{ obj.phone_number }}<br>
+                                    Email: <a href="mailto:{{ obj.email }}">{{ obj.email }}</a>
+                                    <hr>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-sm-4">
+                {% if not error_message %}
+                    <div class="card" style="margin-top: 1em">
+                        <h3>&nbsp;&nbsp;Opportunities</h3>
+                        <div class="card-body">
+                            {% if not opportunities %}
+                                <p>No opportunities to show. Create one now.</p>
+                            {% else %}
+                                {% for obj in opportunities %}
+                                    Name: <a href="/opportunities/{{ obj.id }}/">{{ obj.name }}</a><br>
+                                    Stage: {{ obj.stage }}<br>
+                                    Close Date: {{ obj.close_date }}<br>
+                                    <hr>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

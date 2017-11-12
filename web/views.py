@@ -1,8 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpRequest, JsonResponse
 import time
 import requests
+
+from objects.models import *
 
 
 # Create your views here.
@@ -42,6 +45,81 @@ def compare(request):
 
 def accounts(request):
     return render(request, 'web/accounts.html')
+
+
+def account(request, aid):
+    try:
+        r = Account.objects.get(id=aid)
+    except ObjectDoesNotExist:
+        error_message = "The Account with that ID does not exists"
+        return render(request, 'web/account.html', {'error_message': error_message})
+
+    try:
+        contacts = Contact.objects.filter(works_for=r.id)
+    except ObjectDoesNotExist:
+        contacts = None
+
+    try:
+        opportunities = Opportunity.objects.filter(account=r.id)
+    except ObjectDoesNotExist:
+        opportunities = None
+
+    try:
+        locations = AccountLocation.objects.filter(account=r.id)
+    except ObjectDoesNotExist:
+        locations = None
+
+    data = {
+        'id': r.id,
+        'name': r.name,
+        'phone': r.phone_number,
+        'website': r.website,
+        'parent': r.subsidiary_of,
+        'contacts': contacts,
+        'opportunities': opportunities,
+        'locations': locations
+    }
+
+    return render(request, 'web/account.html', data)
+
+
+def contacts(request):
+    pass
+
+
+def contact(request, cid):
+    try:
+        r = Contact.objects.get(id=cid)
+    except ObjectDoesNotExist:
+        error_message = "The contact with that ID does not exists"
+        return render(request, 'web/contact.html', {'error_message': error_message})
+
+    # try:
+    #     locations = AccountLocation.objects.filter(account=r.id)
+    # except ObjectDoesNotExist:
+    #     locations = None
+
+    data = {
+        'id': r.id,
+        'name': r.name,
+        'phone': r.phone_number,
+        'address': r.address,
+        'email': r.email,
+        'bdate': r.bdate,
+        'added_on': r.added_on,
+        'works_for': r.works_for,
+        'owner': r.owner
+    }
+
+    return render(request, 'web/contact.html', data)
+
+
+def leads(request):
+    pass
+
+
+def opportunities(request):
+    pass
 
 
 def chart1(request):
