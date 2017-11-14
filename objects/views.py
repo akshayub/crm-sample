@@ -70,3 +70,51 @@ def update_oppo(request, oid, stage):
         ld.probability = 100 // (5 - int(stage))
     ld.save()
     return HttpResponse('OK')
+
+
+def account_delete(request, aid):
+    rec = Account.objects.get(id=aid).delete()
+    return HttpResponse("OK")
+
+
+def contact_delete(request, cid):
+    rec = Contact.objects.get(id=cid).delete()
+    return HttpResponse("OK")
+
+
+def lead_delete(request, lid):
+    rec = Lead.objects.get(id=lid).delete()
+    return HttpResponse("OK")
+
+
+def oppo_delete(request, oid):
+    rec = Opportunity.objects.get(id=oid).delete()
+    return HttpResponse("OK")
+
+
+def account_search(request):
+    search = request.GET.get('q', '')
+    recs = Account.objects.filter(name__contains=search)
+    data = serializers.serialize('json', recs)
+    return HttpResponse(data)
+
+
+def contact_search(request):
+    search = request.GET.get('q', '')
+    recs = Contact.objects.filter(name__contains=search)
+    data = serializers.serialize('json', recs)
+    return HttpResponse(data)
+
+
+def lead_search(request):
+    search = request.GET.get('q', '')
+    recs = Lead.objects.filter(name__contains=search)
+    data = serializers.serialize('json', recs)
+    return HttpResponse(data)
+
+
+def oppo_search(request):
+    search = request.GET.get('q', '')
+    recs = Opportunity.objects.filter(name__contains=search)
+    data = serializers.serialize('json', recs)
+    return HttpResponse(data)

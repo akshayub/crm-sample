@@ -17,9 +17,9 @@
                         <div class="input-group">
                             Search
                             <div class="input-group col-sm-3">
-                                <input type="search" class="form-control">
+                                <input type="search" class="form-control" id="searchip">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-primary" type="button"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                    <button class="btn btn-primary" type="button" id="searchbtn"><i class="fa fa-search" aria-hidden="true"></i></button>
                                 </span>
                             </div>
                             <a href="{% url 'web:contact_create' %}" class="btn btn-success" title="Add a new contact" id="addbtn" style="position: absolute;right: 2%"><i class="fa fa-plus"></i></a>
@@ -56,85 +56,107 @@
     <script src="{% static 'js/compareChart.js' %}"></script>
     <script>
 
-    var start = 0;
-    var end = start + 10;
+        var start = 0;
+        var end = start + 10;
 
 
-    function tryParseJSON (jsonString){
-        try {
-            var o = JSON.parse(jsonString);
-            if (o && typeof o === "object") {
-                return o;
+        function tryParseJSON (jsonString){
+            try {
+                var o = JSON.parse(jsonString);
+                if (o && typeof o === "object") {
+                    return o;
+                }
+            }
+            catch (e) { }
+            return false;
+        }
+
+
+        function getTable(start, end) {
+            // Get checkbox value here.
+            // And also the my accounts only checkbox
+            var dtype = 'json';
+            var xhttp = XMLReq(fillTable);
+            var local = window.location.origin;
+            xhttp.open("GET", local + '/api/contacts/' + dtype + '/' + start + '/' + end, true);
+            xhttp.send();
+        }
+
+
+        function fillTable(data) {
+            var parsed = tryParseJSON(data);
+            if (parsed === false) {
+                //It's not JSON. It's something.
+            }
+
+            else {
+                for (var obj in parsed) {
+                    var ob = parsed[obj];
+                    var pk = ob['pk'];
+                    var fields = ob['fields'];
+                    var name = fields['name'];
+                    var email = fields['email'];
+                    var phone = fields['phone_number'];
+                    // Now add the table. :)
+                    var markup = "<tr><td>" + (start + parseInt(obj) + 1) + "</td><td>" +'<a href="/contacts/' + pk + '">' +
+                        name + '</a>' + "</td><td>" + email +"</td><td>"+ phone + "</td></tr>";
+                    $('table tbody').append(markup);
+                }
             }
         }
-        catch (e) { }
-        return false;
-    }
+        getTable(0,10);
 
-
-    function getTable(start, end) {
-        // Get checkbox value here.
-        // And also the my accounts only checkbox
-        var dtype = 'json';
-        var xhttp = XMLReq(fillTable);
-        var local = window.location.origin;
-        xhttp.open("GET", local + '/api/contacts/' + dtype + '/' + start + '/' + end, true);
-        xhttp.send();
-    }
-
-
-    function fillTable(data) {
-        var parsed = tryParseJSON(data);
-        if (parsed === false) {
-            //It's not JSON. It's something.
-        }
-
-        else {
-            for (var obj in parsed) {
-                var ob = parsed[obj];
-                var pk = ob['pk'];
-                var fields = ob['fields'];
-                var name = fields['name'];
-                var email = fields['email'];
-                var phone = fields['phone_number'];
-                // Now add the table. :)
-                var markup = "<tr><td>" + (start + parseInt(obj) + 1) + "</td><td>" +'<a href="/contacts/' + pk + '">' +
-                    name + '</a>' + "</td><td>" + email +"</td><td>"+ phone + "</td></tr>";
-                $('table tbody').append(markup);
-            }
-        }
-    }
-    getTable(0,10);
-
-    $('#prev').click(function () {
-        start = start - 10;
-        if (start < 0) {
-            start = 0;
-        }
-        end = start + 10;
-        $('table tbody tr').remove();
-        getTable(start,end);
-    });
-
-    $('#next').click(function () {
-        start = start + 10;
-        end = start + 10;
-        $('table tbody tr').remove();
-        getTable(start,end);
-    });
-
-    $("#pgidx").keypress(function(event) {
-        if (event.which === 13) {
-            event.preventDefault();
-            start = parseInt($('#pgidx').val()) - 1;
+        $('#prev').click(function () {
+            start = start - 10;
             if (start < 0) {
                 start = 0;
             }
             end = start + 10;
             $('table tbody tr').remove();
             getTable(start,end);
+        });
+
+        $('#next').click(function () {
+            start = start + 10;
+            end = start + 10;
+            $('table tbody tr').remove();
+            getTable(start,end);
+        });
+
+        $("#pgidx").keypress(function(event) {
+            if (event.which === 13) {
+                event.preventDefault();
+                start = parseInt($('#pgidx').val()) - 1;
+                if (start < 0) {
+                    start = 0;
+                }
+                end = start + 10;
+                $('table tbody tr').remove();
+                getTable(start,end);
+            }
+        });
+
+        $("#searchbtn").click(function () {
+            var term = $("#searchip").val();
+            search(term);
+        });
+
+
+        $("#searchip").keypress(function (event) {
+            if (event.which === 13) {
+                event.preventDefault();
+                var term = $("#searchip").val();
+                search(term);
+            }
+        });
+
+        function search(term) {
+            var xhttp = XMLReq(fillTable);
+            var local = window.location.origin;
+            xhttp.open("GET", local + '/api/sch_ctc/?q=' + term, true);
+            $('table tbody tr').remove();
+            xhttp.send();
         }
-    });
 
     </script>
 {% endblock %}

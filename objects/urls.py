@@ -12,4 +12,12 @@ urlpatterns = [
     url(r'^update_lead/(?P<lid>[0-9]+)/(?P<status>[0-9]+)/$', views.update_lead, name='update_lead'),
     url(r'^opportunities/(?P<dtype>[a-z]+)/(?P<start>[0-9]+)/(?P<end>[0-9]+)/$', views.opportunities, name='opportunities'),
     url(r'^update_oppo/(?P<oid>[0-9]+)/(?P<stage>[0-9]+)/$', views.update_oppo, name='update_opportunity'),
+    url(r'^del_acc/(?P<aid>[0-9]+)/$', views.account_delete, name='del_acc'),
+    url(r'^del_ctc/(?P<cid>[0-9]+)/$', views.contact_delete, name='del_ctc'),
+    url(r'^del_lead/(?P<lid>[0-9]+)/$', views.lead_delete, name='del_lead'),
+    url(r'^del_oppo/(?P<oid>[0-9]+)/$', views.oppo_delete, name='del_oppo'),
+    url(r'^sch_acc/$', views.account_search, name='sch_acc'),
+    url(r'^sch_ctc/$', views.contact_search, name='sch_ctc'),
+    url(r'^sch_lead/$', views.lead_search, name='sch_lead'),
+    url(r'^sch_oppo/$', views.oppo_search, name='sch_oppo'),
 ]
