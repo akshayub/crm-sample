@@ -18,7 +18,7 @@ class Lead(models.Model):
     address = models.CharField(max_length=250)
     company = models.CharField(max_length=250)
     email = models.EmailField()
-    status = models.IntegerField()
+    status = models.IntegerField(default=1)
     added_on = models.DateField(default=now)
 
     def __str__(self):

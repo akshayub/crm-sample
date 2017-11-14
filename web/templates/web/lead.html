@@ -1,6 +1,6 @@
 {% extends 'web/base.html' %}
-{% block title %}Accounts{% endblock %}
-{% block account_active %}active{% endblock %}
+{% block title %}Leads{% endblock %}
+{% block lead_active %}active{% endblock %}
 {% block body %}
     <div class="container-fluid">
         <div class="row">
@@ -10,24 +10,25 @@
                     <div class="card-body">
                         <strong> Address </strong> {{ address }} <br>
                         <strong> Company </strong> {{ company }} <br>
+                        <strong> Email </strong> {{ email }} <br>
                         <strong> Added On </strong> {{ added_on }} <br>
-{#                        <strong> Added By </strong> : {{ owner.user.first_name }} {{ owner.user.last_name }}#}
+                        <strong> Added By </strong> : {{ owner.user.first_name }} {{ owner.user.last_name }}
                     </div>
                 </div>
             </div>
             <div class="col-sm-8">
                 <div class="card container-fluid" style="margin-top: 1em; padding: 10px">
+                    <h3>Status</h3>
                     <div class="container-fluid">
-                        <button type="button" class="btn btn-default btn-arrow-right">Open - Not Contacted</button>
-                        <button type="button" class="btn btn-default btn-arrow-right">Working - Contacted</button>
-                        <button type="button" class="btn btn-default btn-arrow-right">Closed - Not Contacted</button>
-                        <button type="button" class="btn btn-default btn-arrow-right">Converted</button>
+                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 0 %}btn-success{% endif %}" id="1">Open - Not Contacted</button>
+                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 1 %}btn-success{% endif %}" id="2">Working - Contacted</button>
+                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 2 %}btn-success{% endif %}" id="3">Closed - Not Contacted</button>
+                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 3 %}btn-success{% endif %}" id="4">Converted</button>
                     </div>
+                    <br>
+                    {% if status %}
                     Status : {{ status }}
-                    <div class="container-fluid col-sm-4" />
-                    <div class="container-fluid col-sm-2">
-                        <button type="button" class="btn btn-group-sm">Mark Status as Completed</button>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

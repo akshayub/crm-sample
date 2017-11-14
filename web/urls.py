@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^contacts/create/$', views.contact_create, name='contact_create'),
     url(r'^leads/(?P<lid>[0-9]+)/$', views.lead, name='lead'),
     url(r'^leads/$', views.leads, name='leads'),
+    url(r'^leads/create/$', views.lead_create, name='lead_create'),
     url(r'^opportunities/$', views.opportunities, name='opportunities'),
     url(r'^chart1/$', views.chart1, name='chart1'),
     url(r'^chart2/$', views.chart2, name='chart2'),
