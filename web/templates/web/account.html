@@ -5,13 +5,13 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-4">
-                <div class="card" style="margin-top: 1em">
+                <div class="card container-fluid" style="margin-top: 1em">
                     {% if error_message %}
-                        <h3>&nbsp;&nbsp;Error!</h3>
-                        <p>&nbsp;{{ error_message }}</p>
+                        <h3>Error!</h3>
+                        <p>{{ error_message }}</p>
                     {% endif %}
                     {% if not error_message %}
-                        <h3>&nbsp;&nbsp;{{ name }}</h3>
+                        <h3>{{ name }}</h3>
                         <div class="card-body">
                             Phone: {{ phone }}<br>
                             Website: <a href="{{ website }}">{{ website }}</a><br>
@@ -34,8 +34,8 @@
             </div>
             <div class="col-sm-4">
                 {% if not error_message %}
-                    <div class="card" style="margin-top: 1em">
-                        <h3>&nbsp;&nbsp;Contacts</h3>
+                    <div class="card container-fluid" style="margin-top: 1em">
+                        <h3>Contacts</h3>
                         <div class="card-body">
                             {% if not contacts %}
                                 <p>No contacts found for this company. Add one now.</p>
@@ -53,8 +53,8 @@
             </div>
             <div class="col-sm-4">
                 {% if not error_message %}
-                    <div class="card" style="margin-top: 1em">
-                        <h3>&nbsp;&nbsp;Opportunities</h3>
+                    <div class="card container-fluid" style="margin-top: 1em">
+                        <h3>Opportunities</h3>
                         <div class="card-body">
                             {% if not opportunities %}
                                 <p>No opportunities to show. Create one now.</p>
