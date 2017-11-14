@@ -153,6 +153,25 @@ def contact(request, cid):
 
     return render(request, 'web/contact.html', data)
 
+def lead(request, lid):
+    try:
+        r = Lead.objects.get(id=lid)
+    except ObjectDoesNotExist:
+        error_message = "The Lead with that ID does not exists"
+        return render(request, 'web/lead.html', {'error_message': error_message})
+
+    data = {
+        'id': r.id,
+        'name': r.name,
+        'address': r.address,
+        'company': r.company,
+        'email': r.email,
+        'status': r.status,
+        'added_on': r.added_on,
+        'owner_id': r.owner_id
+    }
+
+    return render(request, 'web/lead.html', data)
 
 def leads(request):
     if not request.user.is_authenticated:

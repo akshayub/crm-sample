@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^contacts/$', views.contacts, name='contacts'),
     url(r'^contacts/(?P<cid>[0-9]+)/$', views.contact, name='contact'),
     url(r'^contacts/create/$', views.contact_create, name='contact_create'),
+    url(r'^leads/(?P<lid>[0-9]+)/$', views.lead, name='lead'),
     url(r'^leads/$', views.leads, name='leads'),
     url(r'^opportunities/$', views.opportunities, name='opportunities'),
     url(r'^chart1/$', views.chart1, name='chart1'),
