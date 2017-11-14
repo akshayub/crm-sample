@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login, logout, get_user
+from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpRequest, JsonResponse
@@ -6,7 +6,7 @@ import time
 import requests
 
 from objects.models import *
-from .forms import AccountForm, ContactForm, LeadForm
+from .forms import AccountForm, ContactForm, LeadForm, OppoForm
 
 
 # Create your views here.
@@ -104,6 +104,21 @@ def account_create(request):
     return render(request, 'web/account_create.html', context)
 
 
+def account_update(request, aid):
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
+    form = AccountForm(request.POST or None, instance=Account.objects.get(id=aid))
+    if form.is_valid() and request.POST:
+        acct = form.save(commit=False)
+        acct.owner = Owner.objects.get(user=request.user)
+        acct.save()
+        return render(request, 'web/accounts.html')
+    context = {
+        "form": form,
+    }
+    return render(request, 'web/account_edit.html', context)
+
+
 def contact_create(request):
     if not request.user.is_authenticated:
         return render(request, 'web/login.html')
@@ -134,11 +149,6 @@ def contact(request, cid):
         error_message = "The contact with that ID does not exists"
         return render(request, 'web/contact.html', {'error_message': error_message})
 
-    # try:
-    #     locations = AccountLocation.objects.filter(account=r.id)
-    # except ObjectDoesNotExist:
-    #     locations = None
-
     data = {
         'id': r.id,
         'name': r.name,
@@ -152,6 +162,21 @@ def contact(request, cid):
     }
 
     return render(request, 'web/contact.html', data)
+
+
+def contact_update(request, cid):
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
+    form = ContactForm(request.POST or None, instance=Contact.objects.get(id=cid))
+    if form.is_valid() and request.POST:
+        acct = form.save(commit=False)
+        acct.owner = Owner.objects.get(user=request.user)
+        acct.save()
+        return render(request, 'web/contacts.html')
+    context = {
+        "form": form,
+    }
+    return render(request, 'web/contact_edit.html', context)
 
 
 def lead(request, lid):
@@ -169,29 +194,12 @@ def lead(request, lid):
         'email': r.email,
         'status': r.status,
         'added_on': r.added_on,
+        'amount': r.amount,
         'owner': r.owner
     }
 
     return render(request, 'web/lead.html', data)
 
-
-def opportunities(request, oid):
-    try:
-        r = Lead.objects.get(id=oid)
-    except ObjectDoesNotExist:
-        error_message = "The Opportunities with that ID does not exist"
-        return render(request, 'web/opportunities.html', {'error_message': error_message})
-
-    data = {
-        'id': r.id,
-        'name': r.name,
-        'stage': r.stage,
-        'close_date': r.close_date,
-        'probability': r.probability,
-        'description': r.description,
-    }
-
-    return render(request, 'web/opportunities.html', data)
 
 def leads(request):
     if not request.user.is_authenticated:
@@ -214,9 +222,77 @@ def lead_create(request):
     return render(request, 'web/lead_create.html', context)
 
 
+def lead_update(request, lid):
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
+    form = LeadForm(request.POST or None, instance=Lead.objects.get(id=lid))
+    if form.is_valid() and request.POST:
+        acct = form.save(commit=False)
+        acct.owner = Owner.objects.get(user=request.user)
+        acct.save()
+        return render(request, 'web/leads.html')
+    context = {
+        "form": form,
+    }
+    return render(request, 'web/lead_edit.html', context)
+
+
+def opportunity(request, oid):
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
+    try:
+        r = Opportunity.objects.get(id=oid)
+    except ObjectDoesNotExist:
+        error_message = "The Opportunities with that ID does not exist"
+        return render(request, 'web/opportunity.html', {'error_message': error_message})
+
+    data = {
+        'id': r.id,
+        'name': r.name,
+        'stage': r.stage,
+        'close_date': r.close_date,
+        'probability': r.probability,
+        'amount': r.amount,
+        'description': r.description,
+    }
+
+    return render(request, 'web/opportunity.html', data)
+
+
 def opportunities(request):
     if not request.user.is_authenticated:
         return render(request, 'web/login.html')
+    return render(request, 'web/opportunities.html')
+
+
+def opportunity_create(request):
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
+    form = OppoForm(request.POST or None)
+    if form.is_valid():
+        ld = form.save(commit=False)
+        ld.owner = Owner.objects.get(user=request.user)
+        ld.save()
+        return render(request, 'web/opportunities.html')
+    context = {
+        "form": form,
+    }
+    return render(request, 'web/opportunity_create.html', context)
+
+
+def opportunity_update(request, oid):
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
+    form = OppoForm(request.POST or None, instance=Opportunity.objects.get(id=oid))
+    if form.is_valid() and request.POST:
+        acct = form.save(commit=False)
+        acct.owner = Owner.objects.get(user=request.user)
+        acct.save()
+        return render(request, 'web/opportunities.html')
+    context = {
+        "form": form,
+    }
+    return render(request, 'web/opportunity_edit.html', context)
 
 
 def chart1(request):
@@ -246,13 +322,13 @@ def chart1(request):
 
     for x in json_urls:
         start = time.perf_counter()
-        req = requests.get(base_url + x)
+        requests.get(base_url + x)
         end = time.perf_counter()
         json_data.append((end - start))
 
     for x in xml_urls:
         start = time.perf_counter()
-        req = requests.get(base_url + x)
+        requests.get(base_url + x)
         end = time.perf_counter()
         xml_data.append((end - start))
 

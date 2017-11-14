@@ -13,6 +13,7 @@
                         <strong> Company </strong> {{ company }} <br>
                         <strong> Email </strong> {{ email }} <br>
                         <strong> Added On </strong> {{ added_on }} <br>
+                        <strong> Potential amount </strong> $ {{ amount }} <br>
                         <strong> Added By </strong> : {{ owner.user.first_name }} {{ owner.user.last_name }}
                     </div>
                 </div>
@@ -27,9 +28,6 @@
                         <button type="button" class="btn btn-default btn-arrow-right {% if status > 3 %}btn-success{% endif %}" id="4">Converted</button>
                     </div>
                     <br>
-                    {% if status %}
-                    Status : {{ status }}
-                    {% endif %}
                 </div>
             </div>
         </div>

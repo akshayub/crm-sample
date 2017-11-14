@@ -13,20 +13,20 @@
                     {% if not error_message %}
                         <h3>{{ name }}</h3>
                         <div class="card-body">
-                            Phone: {{ phone }}<br>
-                            Website: <a href="{{ website }}">{{ website }}</a><br>
+                            <strong>Phone:</strong> {{ phone }}<br>
+                            <strong>Website:</strong> <a href="{{ website }}">{{ website }}</a><br>
                             {% if parent != None %}
-                                Parent: <a href="/accounts/{{ parent.id }}">{{ parent.name }}</a>
+                                <strong>Parent:</strong> <a href="/accounts/{{ parent.id }}">{{ parent.name }}</a>
                             {% endif %}
                             {% if locations %}
-                                Locations: <br>
+                                <strong>Locations:</strong> <br>
                                 <ul>
                                 {% for loc in locations %}
                                     <li>{{ loc.place }}</li>
                                 {% endfor %}
                                 </ul>
                             {% endif %}
-                            Added by: {{ owner }}
+                            <strong>Added by:</strong> {{ owner }}
                             <br>
                         </div>
                     {% endif %}

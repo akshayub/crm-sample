@@ -12,13 +12,13 @@
                     {% endif %}
                     <h3>{{ name }}</h3>
                     <div class="card-body">
-                        Address: {{ address }}<br>
-                        Email: <a href="mailto:{{ email }}">{{ email }}</a><br>
-                        Phone: {{ phone }}<br>
-                        Birth Date: {{ bdate }}<br>
-                        Works for: <a href="{% url 'web:account' works_for.id %}">{{ works_for.name }}</a><br>
-                        Added On: {{ added_on }}<br>
-                        Added By: {{ owner.user.last_name }}<br>
+                        <strong>Address:</strong> {{ address }}<br>
+                        <strong>Email:</strong> <a href="mailto:{{ email }}">{{ email }}</a><br>
+                        <strong>Phone:</strong> {{ phone }}<br>
+                        <strong>Birth Date:</strong> {{ bdate }}<br>
+                        <strong>Works for:</strong> <a href="{% url 'web:account' works_for.id %}">{{ works_for.name }}</a><br>
+                        <strong>Added On:</strong> {{ added_on }}<br>
+                        <strong>Added By:</strong> {{ owner.user.last_name }}<br>
                     </div>
                 </div>
             </div>
