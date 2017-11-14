@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
-from datetime import datetime
+from django.utils.timezone import now
 
 
 # Create your models here.
@@ -18,8 +18,8 @@ class Lead(models.Model):
     address = models.CharField(max_length=250)
     company = models.CharField(max_length=250)
     email = models.EmailField()
-    status = models.CharField(max_length=250)
-    added_on = models.DateField(default=datetime.now())
+    status = models.IntegerField(default=1)
+    added_on = models.DateField(default=now)
 
     def __str__(self):
         return str(self.id) + " - " + self.name
@@ -40,7 +40,7 @@ class Account(models.Model):
         blank=True
     )
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    added_on = models.DateField(default=datetime.now())
+    added_on = models.DateField(default=now)
 
     # Recursive relationship
     # https://stackoverflow.com/questions/18271001/django-recursive-relationship
@@ -93,7 +93,7 @@ class Contact(models.Model):
 
     bdate = models.DateField()
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    added_on = models.DateField(default=datetime.now())
+    added_on = models.DateField(default=now)
     works_for = models.ForeignKey(Account, on_delete=models.CASCADE)
 
     def __str__(self):

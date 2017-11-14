@@ -20,7 +20,33 @@ def leads_json(request, size):
 
 def accounts(request, dtype, start, end):
     objs = Account.objects.all()[int(start):int(end)]
-    # objs = Account.objects.all()
+    if dtype == 'json':
+        data = serializers.serialize('json', objs)
+    else:
+        data = serializers.serialize('xml', objs)
+    return HttpResponse(data)
+
+
+def contacts(request, dtype, start, end):
+    objs = Contact.objects.all()[int(start):int(end)]
+    if dtype == 'json':
+        data = serializers.serialize('json', objs)
+    else:
+        data = serializers.serialize('xml', objs)
+    return HttpResponse(data)
+
+
+def leads(request, dtype, start, end):
+    objs = Lead.objects.all()[int(start):int(end)]
+    if dtype == 'json':
+        data = serializers.serialize('json', objs)
+    else:
+        data = serializers.serialize('xml', objs)
+    return HttpResponse(data)
+
+
+def opportunities(request, dtype, start, end):
+    objs = Lead.objects.all()[int(start):int(end)]
     if dtype == 'json':
         data = serializers.serialize('json', objs)
     else:

@@ -6,7 +6,7 @@ import time
 import requests
 
 from objects.models import *
-from .forms import AccountForm, ContactForm
+from .forms import AccountForm, ContactForm, LeadForm
 
 
 # Create your views here.
@@ -153,6 +153,7 @@ def contact(request, cid):
 
     return render(request, 'web/contact.html', data)
 
+
 def lead(request, lid):
     try:
         r = Lead.objects.get(id=lid)
@@ -168,14 +169,31 @@ def lead(request, lid):
         'email': r.email,
         'status': r.status,
         'added_on': r.added_on,
-        # 'owner': r.owner
+        'owner': r.owner
     }
 
     return render(request, 'web/lead.html', data)
 
+
 def leads(request):
     if not request.user.is_authenticated:
         return render(request, 'web/login.html')
+    return render(request, 'web/leads.html')
+
+
+def lead_create(request):
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
+    form = LeadForm(request.POST or None)
+    if form.is_valid():
+        ld = form.save(commit=False)
+        ld.owner = Owner.objects.get(user=request.user)
+        ld.save()
+        return render(request, 'web/leads.html')
+    context = {
+        "form": form,
+    }
+    return render(request, 'web/lead_create.html', context)
 
 
 def opportunities(request):
