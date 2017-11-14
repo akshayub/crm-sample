@@ -30,7 +30,7 @@ class LeadForm(forms.ModelForm):
 
     class Meta:
         model = Lead
-        fields = ['name', 'address', 'email', 'company']
+        fields = ['name', 'address', 'email', 'company', 'amount']
 
 
 class OppoForm(forms.ModelForm):
@@ -54,7 +54,7 @@ class ContactUpdate(UpdateView):
 
 class LeadUpdate(UpdateView):
     model = Lead
-    fields = ['name', 'address', 'email', 'company']
+    fields = ['name', 'address', 'email', 'company', 'amount']
     template_name_suffix = '_update_form'
 
 

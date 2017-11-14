@@ -20,4 +20,7 @@ urlpatterns = [
     url(r'^sch_ctc/$', views.contact_search, name='sch_ctc'),
     url(r'^sch_lead/$', views.lead_search, name='sch_lead'),
     url(r'^sch_oppo/$', views.oppo_search, name='sch_oppo'),
+    url(r'^lead_db/$', views.dashboard_lead_data, name='lead_db'),
+    url(r'^oppo_db/$', views.dashboard_oppo_data, name='oppo_db'),
+    url(r'^recent_leads/$', views.recent_unclosed_leads, name='recent_leads')
 ]

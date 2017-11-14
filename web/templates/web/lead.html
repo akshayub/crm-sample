@@ -15,7 +15,7 @@
                     <div class="card-body">
                         <strong> Address </strong> {{ address }} <br>
                         <strong> Company </strong> {{ company }} <br>
-                        <strong> Email </strong> {{ email }} <br>
+                        <strong> Email </strong> <a href="mailto:{{ email }}">{{ email }}</a><br>
                         <strong> Added On </strong> {{ added_on }} <br>
                         <strong> Potential amount </strong> $ {{ amount }} <br>
                         <strong> Added By </strong> : {{ owner.user.first_name }} {{ owner.user.last_name }}
@@ -28,7 +28,7 @@
                     <div class="container-fluid">
                         <button type="button" class="btn btn-default btn-arrow-right {% if status > 0 %}btn-success{% endif %}" id="1">Open - Not Contacted</button>
                         <button type="button" class="btn btn-default btn-arrow-right {% if status > 1 %}btn-success{% endif %}" id="2">Working - Contacted</button>
-                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 2 %}btn-success{% endif %}" id="3">Closed - Not Contacted</button>
+                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 2 %}btn-success{% endif %}" id="3">Closed - Not Converted</button>
                         <button type="button" class="btn btn-default btn-arrow-right {% if status > 3 %}btn-success{% endif %}" id="4">Converted</button>
                     </div>
                     <br>

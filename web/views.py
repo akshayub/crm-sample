@@ -250,6 +250,7 @@ def opportunity(request, oid):
         'id': r.id,
         'name': r.name,
         'stage': r.stage,
+        'account': r.account,
         'close_date': r.close_date,
         'probability': r.probability,
         'amount': r.amount,

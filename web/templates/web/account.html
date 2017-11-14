@@ -21,7 +21,7 @@
                             <strong>Phone:</strong> {{ phone }}<br>
                             <strong>Website:</strong> <a href="{{ website }}">{{ website }}</a><br>
                             {% if parent != None %}
-                                <strong>Parent:</strong> <a href="/accounts/{{ parent.id }}">{{ parent.name }}</a>
+                                <strong>Parent:</strong> <a href="/accounts/{{ parent.id }}">{{ parent.name }}</a><br>
                             {% endif %}
                             {% if locations %}
                                 <strong>Locations:</strong> <br>

@@ -1,7 +1,6 @@
 from django.core import serializers
-from django.http import HttpResponse
-# from django.shortcuts import render
-
+from django.http import HttpResponse, JsonResponse
+from django.db.models import Sum
 from .models import *
 
 
@@ -19,7 +18,7 @@ def leads_json(request, size):
 
 
 def accounts(request, dtype, start, end):
-    objs = Account.objects.all()[int(start):int(end)]
+    objs = Account.objects.order_by('-added_on')[int(start):int(end)]
     if dtype == 'json':
         data = serializers.serialize('json', objs)
     else:
@@ -28,7 +27,7 @@ def accounts(request, dtype, start, end):
 
 
 def contacts(request, dtype, start, end):
-    objs = Contact.objects.all()[int(start):int(end)]
+    objs = Contact.objects.order_by('-added_on')[int(start):int(end)]
     if dtype == 'json':
         data = serializers.serialize('json', objs)
     else:
@@ -37,7 +36,7 @@ def contacts(request, dtype, start, end):
 
 
 def leads(request, dtype, start, end):
-    objs = Lead.objects.all()[int(start):int(end)]
+    objs = Lead.objects.order_by('-added_on')[int(start):int(end)]
     if dtype == 'json':
         data = serializers.serialize('json', objs)
     else:
@@ -46,7 +45,7 @@ def leads(request, dtype, start, end):
 
 
 def opportunities(request, dtype, start, end):
-    objs = Opportunity.objects.all()[int(start):int(end)]
+    objs = Opportunity.objects.order_by('-close_date')[int(start):int(end)]
     if dtype == 'json':
         data = serializers.serialize('json', objs)
     else:
@@ -118,3 +117,41 @@ def oppo_search(request):
     recs = Opportunity.objects.filter(name__contains=search)
     data = serializers.serialize('json', recs)
     return HttpResponse(data)
+
+
+def dashboard_lead_data(request):
+    r_not_closed = Lead.objects.filter(status__lt=3).aggregate(Sum('amount'))['amount__sum']
+    r_not_converted = Lead.objects.filter(status=3).aggregate(Sum('amount'))['amount__sum']
+    r_converted = Lead.objects.filter(status=4).aggregate(Sum('amount'))['amount__sum']
+
+    data = {
+        'datasets': [{
+            'data': [r_not_closed, r_not_converted, r_converted],
+            "backgroundColor": ["rgb(255, 99, 132)", "rgb(54, 162, 235)", "rgb(255, 205, 86)"]
+        }],
+        'labels': ['Not Closed', 'Not converted', 'Converted']
+    }
+
+    return JsonResponse(data)
+
+
+def dashboard_oppo_data(request):
+    r_not_closed = Opportunity.objects.filter(stage__lt=4).aggregate(Sum('amount'))['amount__sum']
+    r_not_converted = Opportunity.objects.filter(stage=5).aggregate(Sum('amount'))['amount__sum']
+    r_converted = Opportunity.objects.filter(stage=4).aggregate(Sum('amount'))['amount__sum']
+
+    data = {
+        'datasets': [{
+            'data': [r_not_closed, r_not_converted, r_converted],
+            "backgroundColor": ["rgb(157, 147, 101)", "rgb(54, 162, 235)", "rgb(25, 5, 206)"]
+        }],
+        'labels': ['Not Closed', 'Closed Lost', 'Closed Won']
+    }
+
+    return JsonResponse(data)
+
+
+def recent_unclosed_leads(request):
+    rew = Lead.objects.filter(status__lt=3).order_by('-added_on')[:10]
+    data = serializers.serialize('json', rew)
+    return JsonResponse(data, safe=False)
