@@ -8,7 +8,7 @@
             <div class="col-lg-12 col-sm-12">
                 <div class="card" style="margin-top: 1em">
                     <div class="card-body">
-                        <i class="fa fa-building" style="font-size:48px;"></i>
+                            <i class="fa fa-tasks" style="font-size:48px;"></i>
                         <div style="display: inline-block">
                             <h4 class="page-titles">Leads</h4>
                         </div>
@@ -97,6 +97,21 @@
                 var name = fields['name'];
                 var email = fields['email'];
                 var status = fields['status'];
+
+                if (status === 1) {
+                    status = 'Open - Not Contacted';
+                }
+                else if (status === 2) {
+                    status = 'Working - Contacted';
+                }
+                else if (status === 3) {
+                    status = 'Closed - Not Contacted';
+                }
+                else {
+                    status = 'Converted';
+                }
+
+
                 // Now add the table. :)
                 var markup = "<tr><td>" + (start + parseInt(obj) + 1) + "</td><td>" +'<a href="/leads/' + pk + '">' +
                     name + '</a>' + "</td><td>" + email +"</td><td>"+ status + "</td></tr>";

@@ -102,7 +102,7 @@ class Contact(models.Model):
 
 class Opportunity(models.Model):
     name = models.CharField(max_length=200)
-    stage = models.CharField(max_length=200)
+    stage = models.IntegerField()
     close_date = models.DateField()
     probability = models.IntegerField()
     description = models.CharField(max_length=1000)

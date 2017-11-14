@@ -52,3 +52,17 @@ def opportunities(request, dtype, start, end):
     else:
         data = serializers.serialize('xml', objs)
     return HttpResponse(data)
+
+
+def update_lead(request, lid, status):
+    ld = Lead.objects.get(id=lid)
+    ld.status = status
+    ld.save()
+    return HttpResponse('OK')
+
+
+def update_oppo(request, oid, status):
+    ld = Opportunity.objects.get(id=oid)
+    ld.status = status
+    ld.save()
+    return HttpResponse('OK')

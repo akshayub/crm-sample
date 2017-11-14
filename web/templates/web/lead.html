@@ -1,4 +1,5 @@
 {% extends 'web/base.html' %}
+{% load staticfiles %}
 {% block title %}Leads{% endblock %}
 {% block lead_active %}active{% endblock %}
 {% block body %}
@@ -33,4 +34,41 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block js_scripts %}
+    <script src="{% static 'js/compareChart.js' %}"></script>
+    <script>
+        $('#1').click(function () {
+            var xhttp = XMLReq(rel);
+            var local = window.location.origin;
+            xhttp.open("GET", local + '/api/update_lead/' + {{ id }} + '/1', true);
+            xhttp.send();
+        });
+
+        $('#2').click(function () {
+            var xhttp = XMLReq(rel);
+            var local = window.location.origin;
+            xhttp.open("GET", local + '/api/update_lead/' + {{ id }} + '/2', true);
+            xhttp.send();
+        });
+
+        $('#3').click(function () {
+            var xhttp = XMLReq(rel);
+            var local = window.location.origin;
+            xhttp.open("GET", local + '/api/update_lead/' + {{ id }} + '/3', true);
+            xhttp.send();
+        });
+
+        $('#4').click(function () {
+            var xhttp = XMLReq(rel);
+            var local = window.location.origin;
+            xhttp.open("GET", local + '/api/update_lead/' + {{ id }} + '/4', true);
+            xhttp.send();
+        });
+
+        function rel(data){
+            location.reload();
+        }
+
+    </script>
 {% endblock %}
