@@ -1,10 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'web/base.html' %}
+{% block title %}Leads{% endblock %}
+{% block lead_active %}active{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="card container-fluid" style="margin-top: 1em">
+                    <h3>{{ name }}</h3>
+                    <div class="card-body">
+                        <strong> Stage </strong> {{ stage }} <br>
+                        <strong> Close Date </strong> {{ close_date }} <br>
+                        <strong> Probability </strong> {{ probability }} <br>
+                        <strong> Description </strong> {{ description }} <br>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="card container-fluid" style="margin-top: 1em; padding: 10px">
+                    <h3>Status</h3>
+                    <div class="container-fluid">
+                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 0 %}btn-success{% endif %}" id="1">Open - Not Contacted</button>
+                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 1 %}btn-success{% endif %}" id="2">Working - Contacted</button>
+                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 2 %}btn-success{% endif %}" id="3">Closed - Not Contacted</button>
+                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 3 %}btn-success{% endif %}" id="4">Converted</button>
+                    </div>
+                    <br>
+                    {% if status %}
+                    Status : {{ status }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

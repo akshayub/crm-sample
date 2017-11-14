@@ -175,6 +175,24 @@ def lead(request, lid):
     return render(request, 'web/lead.html', data)
 
 
+def opportunities(request, oid):
+    try:
+        r = Lead.objects.get(id=oid)
+    except ObjectDoesNotExist:
+        error_message = "The Opportunities with that ID does not exist"
+        return render(request, 'web/opportunities.html', {'error_message': error_message})
+
+    data = {
+        'id': r.id,
+        'name': r.name,
+        'stage': r.stage,
+        'close_date': r.close_date,
+        'probability': r.probability,
+        'description': r.description,
+    }
+
+    return render(request, 'web/opportunities.html', data)
+
 def leads(request):
     if not request.user.is_authenticated:
         return render(request, 'web/login.html')
