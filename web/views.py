@@ -168,7 +168,7 @@ def lead(request, lid):
         'email': r.email,
         'status': r.status,
         'added_on': r.added_on,
-        'owner_id': r.owner_id
+        # 'owner': r.owner
     }
 
     return render(request, 'web/lead.html', data)
