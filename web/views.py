@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpRequest, JsonResponse
@@ -6,6 +6,7 @@ import time
 import requests
 
 from objects.models import *
+from .forms import AccountForm, ContactForm
 
 
 # Create your views here.
@@ -40,34 +41,38 @@ def logout_user(request):
 
 
 def compare(request):
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
     return render(request, 'web/compare.html')
 
 
 def accounts(request):
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
     return render(request, 'web/accounts.html')
 
 
 def account(request, aid):
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
     try:
         r = Account.objects.get(id=aid)
     except ObjectDoesNotExist:
         error_message = "The Account with that ID does not exists"
         return render(request, 'web/account.html', {'error_message': error_message})
 
-    try:
-        contacts = Contact.objects.filter(works_for=r.id)
-    except ObjectDoesNotExist:
-        contacts = None
+    ctcs = Contact.objects.filter(works_for=r.id)
+    oppo = Opportunity.objects.filter(account=r.id)
+    loc = AccountLocation.objects.filter(account=r.id)
 
-    try:
-        opportunities = Opportunity.objects.filter(account=r.id)
-    except ObjectDoesNotExist:
-        opportunities = None
+    if len(ctcs) == 0:
+        ctcs = None
 
-    try:
-        locations = AccountLocation.objects.filter(account=r.id)
-    except ObjectDoesNotExist:
-        locations = None
+    if len(oppo) == 0:
+        oppo = None
+
+    if len(loc) == 0:
+        loc = None
 
     data = {
         'id': r.id,
@@ -75,19 +80,54 @@ def account(request, aid):
         'phone': r.phone_number,
         'website': r.website,
         'parent': r.subsidiary_of,
-        'contacts': contacts,
-        'opportunities': opportunities,
-        'locations': locations
+        'contacts': ctcs,
+        'opportunities': oppo,
+        'locations': loc,
+        'owner': r.owner.user.first_name + " " + r.owner.user.last_name
     }
 
     return render(request, 'web/account.html', data)
 
 
+def account_create(request):
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
+    form = AccountForm(request.POST or None)
+    if form.is_valid():
+        acct = form.save(commit=False)
+        acct.owner = Owner.objects.get(user=request.user)
+        acct.save()
+        return render(request, 'web/accounts.html')
+    context = {
+        "form": form,
+    }
+    return render(request, 'web/account_create.html', context)
+
+
+def contact_create(request):
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
+    form = ContactForm(request.POST or None)
+    if form.is_valid():
+        cntct = form.save(commit=False)
+        cntct.owner = Owner.objects.get(user=request.user)
+        cntct.save()
+        return render(request, 'web/contacts.html')
+    context = {
+        "form": form,
+    }
+    return render(request, 'web/contact_create.html', context)
+
+
 def contacts(request):
-    pass
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
+    return render(request, 'web/contacts.html')
 
 
 def contact(request, cid):
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
     try:
         r = Contact.objects.get(id=cid)
     except ObjectDoesNotExist:
@@ -115,11 +155,13 @@ def contact(request, cid):
 
 
 def leads(request):
-    pass
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
 
 
 def opportunities(request):
-    pass
+    if not request.user.is_authenticated:
+        return render(request, 'web/login.html')
 
 
 def chart1(request):

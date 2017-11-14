@@ -7,25 +7,29 @@
             <div class="col-sm-4">
                 <div class="card" style="margin-top: 1em">
                     {% if error_message %}
-                        <h5>Error!</h5>
-                        <p>{{ error_message }}</p>
+                        <h3>&nbsp;&nbsp;Error!</h3>
+                        <p>&nbsp;{{ error_message }}</p>
                     {% endif %}
-                    <h3>&nbsp;&nbsp;{{ name }}</h3>
-                    <div class="card-body">
-                        Phone: {{ phone }}<br>
-                        Website: <a href="{{ website }}">{{ website }}</a><br>
-                        {% if parent != None %}
-                            Parent: <a href="/accounts/{{ parent.id }}">{{ parent.name }}</a>
-                        {% endif %}
-                        {% if locations != None %}
-                            Locations: <br>
-                            <ul>
-                            {% for loc in locations %}
-                                <li>{{ loc.place }}</li>
-                            {% endfor %}
-                            </ul>
-                        {% endif %}
-                    </div>
+                    {% if not error_message %}
+                        <h3>&nbsp;&nbsp;{{ name }}</h3>
+                        <div class="card-body">
+                            Phone: {{ phone }}<br>
+                            Website: <a href="{{ website }}">{{ website }}</a><br>
+                            {% if parent != None %}
+                                Parent: <a href="/accounts/{{ parent.id }}">{{ parent.name }}</a>
+                            {% endif %}
+                            {% if locations %}
+                                Locations: <br>
+                                <ul>
+                                {% for loc in locations %}
+                                    <li>{{ loc.place }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
+                            Added by: {{ owner }}
+                            <br>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="col-sm-4">

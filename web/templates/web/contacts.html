@@ -1,10 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'web/base.html' %}
+{% block title %}Contacts{% endblock %}
+{% block contact_active %}active{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card" style="margin-top: 1em">
+                    <div class="card-body">
+                        <i class="fa fa-user" style="font-size:48px;"></i>
+                        <div style="display: inline-block">
+                            <h4 class="page-titles">Contacts</h4>
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            Sort by:&nbsp;
+                            <select class="custom-select" id="sortsel">
+                                <option selected value="1">Name</option>
+                                <option value="2">Added On</option>
+                                <option value="3">Owner</option>
+                            </select>
+                            &nbsp;
+                            <div class="input-group col-sm-3">
+                                <input type="search" class="form-control">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                        <div style="position: absolute; right: 2%;">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="myaccchk">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">My accounts only</span>
+                            </label>
+                            <button class="btn btn-success" title="Add a new account" id="addbtn"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-danger" title="Delete" id="dltbtn"><i class="fa fa-trash"></i></button>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                        {# The table comes here #}
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>Website</th>
+                                    <th>Phone</th>
+                                    <th>Account Owner</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {# Should be autofilled by AJAX requests #}
+                                <tr>
+                                    <td>1</td>
+                                    <td>Kini Inc.</td>
+                                    <td>www.kini.com</td>
+                                    <td>+9127 58566 55422</td>
+                                    <td>AKini</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
