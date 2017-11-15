@@ -93,28 +93,28 @@ def oppo_delete(request, oid):
 
 def account_search(request):
     search = request.GET.get('q', '')
-    recs = Account.objects.filter(name__contains=search)
+    recs = Account.objects.filter(name__icontains=search)
     data = serializers.serialize('json', recs)
     return HttpResponse(data)
 
 
 def contact_search(request):
     search = request.GET.get('q', '')
-    recs = Contact.objects.filter(name__contains=search)
+    recs = Contact.objects.filter(name__icontains=search)
     data = serializers.serialize('json', recs)
     return HttpResponse(data)
 
 
 def lead_search(request):
     search = request.GET.get('q', '')
-    recs = Lead.objects.filter(name__contains=search)
+    recs = Lead.objects.filter(name__icontains=search)
     data = serializers.serialize('json', recs)
     return HttpResponse(data)
 
 
 def oppo_search(request):
     search = request.GET.get('q', '')
-    recs = Opportunity.objects.filter(name__contains=search)
+    recs = Opportunity.objects.filter(name__icontains=search)
     data = serializers.serialize('json', recs)
     return HttpResponse(data)
 
@@ -155,3 +155,25 @@ def recent_unclosed_leads(request):
     rew = Lead.objects.filter(status__lt=3).order_by('-added_on')[:10]
     data = serializers.serialize('json', rew)
     return JsonResponse(data, safe=False)
+
+
+def lead_to_acc(request, lid):
+    obj = Lead.objects.get(id=lid)
+    name = obj.name
+    address = obj.address
+    company = obj.company
+    email = obj.email
+    acct = Account.objects.create(
+        name=company,
+        owner=Owner.objects.get(user=request.user)
+    )
+
+    ctc = Contact.objects.create(
+        name=name,
+        address=address,
+        email=email,
+        bdate=now(),
+        owner=Owner.objects.get(user=request.user),
+        works_for=acct
+    )
+    return HttpResponse('OK')
