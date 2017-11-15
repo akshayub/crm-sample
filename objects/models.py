@@ -77,7 +77,7 @@ class Contact(models.Model):
         blank=True
     )
 
-    bdate = models.DateField()
+    bdate = models.DateField(blank=True)
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     added_on = models.DateField(default=now)
     works_for = models.ForeignKey(Account, on_delete=models.CASCADE)
