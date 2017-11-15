@@ -1,35 +1,181 @@
 {% extends 'web/base.html' %}
-{% block title %}Leads{% endblock %}
-{% block lead_active %}active{% endblock %}
+{% load staticfiles %}
+{% block title %}Opportunities{% endblock %}
+{% block opportunity_active %}active{% endblock %}
 {% block body %}
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-4">
-                <div class="card container-fluid" style="margin-top: 1em">
-                    <h3>{{ name }}</h3>
+            <div class="col-lg-12 col-sm-12">
+                <div class="card" style="margin-top: 1em">
                     <div class="card-body">
-                        <strong> Stage </strong> {{ stage }} <br>
-                        <strong> Close Date </strong> {{ close_date }} <br>
-                        <strong> Probability </strong> {{ probability }} <br>
-                        <strong> Description </strong> {{ description }} <br>
+                            <i class="fa fa-lightbulb-o" style="font-size:48px;"></i>
+                        <div style="display: inline-block">
+                            <h4 class="page-titles">Opportunities</h4>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="input-group">
+                            Search
+                            <div class="input-group col-sm-3">
+                                <input type="search" class="form-control" id="searchip">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button" id="searchbtn"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                </span>
+                            </div>
+                            <a href="{% url 'web:opportunity_create' %}" class="btn btn-success" title="Add a new opportunity" id="addbtn" style="position: absolute;right: 2%"><i class="fa fa-plus"></i></a>
+                        </div>
+                        <br>
+                        {# The table comes here #}
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>Close Date</th>
+                                    <th>Stage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <div style="position: absolute; right: 2%;">
+                            <button type="button" class="btn btn-primary" id="prev"><i class="fa fa-arrow-left"></i>&nbsp;Previous</button>
+                            &nbsp;
+                            <input type="text" placeholder="Index..." size="10%" id="pgidx">
+                            &nbsp;
+                            <button type="button" class="btn btn-primary" id="next">Next&nbsp;<i class="fa fa-arrow-right"></i></button>
+                        </div>
+                        <br>
                     </div>
-                </div>
-            </div>
-            <div class="col-sm-8">
-                <div class="card container-fluid" style="margin-top: 1em; padding: 10px">
-                    <h3>Status</h3>
-                    <div class="container-fluid">
-                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 0 %}btn-success{% endif %}" id="1">Open - Not Contacted</button>
-                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 1 %}btn-success{% endif %}" id="2">Working - Contacted</button>
-                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 2 %}btn-success{% endif %}" id="3">Closed - Not Contacted</button>
-                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 3 %}btn-success{% endif %}" id="4">Converted</button>
-                    </div>
-                    <br>
-                    {% if status %}
-                    Status : {{ status }}
-                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
+{% block js_scripts %}
+    <script src="{% static 'js/compareChart.js' %}"></script>
+    <script>
+
+        var start = 0;
+        var end = start + 10;
+
+
+        function tryParseJSON (jsonString){
+            try {
+                var o = JSON.parse(jsonString);
+                if (o && typeof o === "object") {
+                    return o;
+                }
+            }
+            catch (e) { }
+            return false;
+        }
+
+
+        function getTable(start, end) {
+            // Get checkbox value here.
+            // And also the my accounts only checkbox
+            var dtype = 'json';
+            var xhttp = XMLReq(fillTable);
+            var local = window.location.origin;
+            xhttp.open("GET", local + '/api/opportunities/' + dtype + '/' + start + '/' + end, true);
+            xhttp.send();
+        }
+
+
+        function fillTable(data) {
+            var parsed = tryParseJSON(data);
+            if (parsed === false) {
+                //It's not JSON. It's something.
+            }
+
+            else {
+                for (var obj in parsed) {
+                    var ob = parsed[obj];
+                    var pk = ob['pk'];
+                    var fields = ob['fields'];
+                    var name = fields['name'];
+                    var close_date = fields['close_date'];
+                    var status = fields['stage'];
+
+                    if (status === 1) {
+                        status = 'Prospecting';
+                    }
+                    else if (status === 2) {
+                        status = 'Analysis';
+                    }
+                    else if (status === 3) {
+                        status = 'Price Quote';
+                    }
+                    else if (status === 4) {
+                        status = 'Closed Won';
+                    }
+                    else if (status === 5) {
+                        status = 'Closed Lost';
+                    }
+
+
+                    // Now add the table. :)
+                    var markup = "<tr><td>" + (start + parseInt(obj) + 1) + "</td><td>" +'<a href="/opportunities/' + pk + '">' +
+                        name + '</a>' + "</td><td>" + close_date +"</td><td>"+ status + "</td></tr>";
+                    $('table tbody').append(markup);
+                }
+            }
+        }
+        getTable(0,10);
+
+        $('#prev').click(function () {
+            start = start - 10;
+            if (start < 0) {
+                start = 0;
+            }
+            end = start + 10;
+            $('table tbody tr').remove();
+            getTable(start,end);
+        });
+
+        $('#next').click(function () {
+            start = start + 10;
+            end = start + 10;
+            $('table tbody tr').remove();
+            getTable(start,end);
+        });
+
+        $("#pgidx").keypress(function(event) {
+            if (event.which === 13) {
+                event.preventDefault();
+                start = parseInt($('#pgidx').val()) - 1;
+                if (start < 0) {
+                    start = 0;
+                }
+                end = start + 10;
+                $('table tbody tr').remove();
+                getTable(start,end);
+            }
+        });
+
+        $("#searchbtn").click(function () {
+            var term = $("#searchip").val();
+            search(term);
+        });
+
+
+        $("#searchip").keypress(function (event) {
+            if (event.which === 13) {
+                event.preventDefault();
+                var term = $("#searchip").val();
+                search(term);
+            }
+        });
+
+        function search(term) {
+            var xhttp = XMLReq(fillTable);
+            var local = window.location.origin;
+            xhttp.open("GET", local + '/api/sch_oppo/?q=' + term, true);
+            $('table tbody tr').remove();
+            xhttp.send();
+        }
+
+
+    </script>
 {% endblock %}

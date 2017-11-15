@@ -1,4 +1,5 @@
 {% extends 'web/base.html' %}
+{% load staticfiles %}
 {% block title %}Leads{% endblock %}
 {% block lead_active %}active{% endblock %}
 {% block body %}
@@ -7,11 +8,16 @@
             <div class="col-sm-4">
                 <div class="card container-fluid" style="margin-top: 1em">
                     <h3>{{ name }}</h3>
+                    <div style="position: absolute; right: 2em;margin-top: 0.5em;">
+                        <a href="edit/" class="btn btn-primary" title="Edit lead" id="editbtn"><i class="fa fa-pencil"></i></a>
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" title="Delete record" id="del"><i class="fa fa-trash"></i></button>
+                    </div>
                     <div class="card-body">
                         <strong> Address </strong> {{ address }} <br>
                         <strong> Company </strong> {{ company }} <br>
-                        <strong> Email </strong> {{ email }} <br>
+                        <strong> Email </strong> <a href="mailto:{{ email }}">{{ email }}</a><br>
                         <strong> Added On </strong> {{ added_on }} <br>
+                        <strong> Potential amount </strong> $ {{ amount }} <br>
                         <strong> Added By </strong> : {{ owner.user.first_name }} {{ owner.user.last_name }}
                     </div>
                 </div>
@@ -22,15 +28,79 @@
                     <div class="container-fluid">
                         <button type="button" class="btn btn-default btn-arrow-right {% if status > 0 %}btn-success{% endif %}" id="1">Open - Not Contacted</button>
                         <button type="button" class="btn btn-default btn-arrow-right {% if status > 1 %}btn-success{% endif %}" id="2">Working - Contacted</button>
-                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 2 %}btn-success{% endif %}" id="3">Closed - Not Contacted</button>
+                        <button type="button" class="btn btn-default btn-arrow-right {% if status > 2 %}btn-success{% endif %}" id="3">Closed - Not Converted</button>
                         <button type="button" class="btn btn-default btn-arrow-right {% if status > 3 %}btn-success{% endif %}" id="4">Converted</button>
                     </div>
                     <br>
-                    {% if status %}
-                    Status : {{ status }}
-                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirmation</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to delete this record?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" id="delcnf">Yes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+{% block js_scripts %}
+    <script src="{% static 'js/compareChart.js' %}"></script>
+    <script src="{% static 'js/delete.js' %}"></script>
+    <script>
+        $('#1').click(function () {
+            var xhttp = XMLReq(rel);
+            var local = window.location.origin;
+            xhttp.open("GET", local + '/api/update_lead/' + {{ id }} + '/1', true);
+            xhttp.send();
+        });
+
+        $('#2').click(function () {
+            var xhttp = XMLReq(rel);
+            var local = window.location.origin;
+            xhttp.open("GET", local + '/api/update_lead/' + {{ id }} + '/2', true);
+            xhttp.send();
+        });
+
+        $('#3').click(function () {
+            var xhttp = XMLReq(rel);
+            var local = window.location.origin;
+            xhttp.open("GET", local + '/api/update_lead/' + {{ id }} + '/3', true);
+            xhttp.send();
+        });
+
+        $('#4').click(function () {
+            var xhttp = XMLReq(rel);
+            var local = window.location.origin;
+            xhttp.open("GET", local + '/api/update_lead/' + {{ id }} + '/4', true);
+            xhttp.send();
+        });
+
+        function rel(data){
+            location.reload();
+        }
+
+        function loadUrl(location) {
+            this.document.location.href = location;
+        }
+
+        $('#delcnf').click(function(){
+            deleteObj('/api/del_lead/{{ id }}/');
+            loadUrl(window.location.origin + '/leads/');
+        });
+
+
+    </script>
 {% endblock %}

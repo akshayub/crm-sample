@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.validators import RegexValidator
 from django.utils.timezone import now
 
 
@@ -20,6 +19,7 @@ class Lead(models.Model):
     email = models.EmailField()
     status = models.IntegerField(default=1)
     added_on = models.DateField(default=now)
+    amount = models.IntegerField()
 
     def __str__(self):
         return str(self.id) + " - " + self.name
@@ -28,14 +28,7 @@ class Lead(models.Model):
 class Account(models.Model):
     name = models.CharField(max_length=250)
     website = models.CharField(max_length=250)
-    phone_regex = RegexValidator(
-        regex=r'^\+?1?\d{9,15}$',
-        message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
-    )
-
-    # validators should be a list
     phone_number = models.CharField(
-        validators=[phone_regex],
         max_length=15,
         blank=True
     )
@@ -79,14 +72,7 @@ class Contact(models.Model):
     name = models.CharField(max_length=250)
     address = models.CharField(max_length=250)
     email = models.EmailField()
-    phone_regex = RegexValidator(
-        regex=r'^\+?1?\d{9,15}$',
-        message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
-    )
-
-    # validators should be a list
     phone_number = models.CharField(
-        validators=[phone_regex],
         max_length=15,
         blank=True
     )
@@ -102,12 +88,13 @@ class Contact(models.Model):
 
 class Opportunity(models.Model):
     name = models.CharField(max_length=200)
-    stage = models.CharField(max_length=200)
+    stage = models.IntegerField(default=1)
     close_date = models.DateField()
     probability = models.IntegerField()
     description = models.CharField(max_length=1000)
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    amount = models.IntegerField()
 
     def __str__(self):
         return str(self.id) + " - " + self.name

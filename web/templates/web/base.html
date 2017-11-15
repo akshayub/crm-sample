@@ -41,23 +41,23 @@
             <ul class="nav-pills navbar-nav mr-auto"></ul>
             <ul class="nav-pills navbar-nav">
                 {# A search bar is coming here.. #}
-                <li class="nav-item">
+{#                <li class="nav-item">#}
                     {# So many hacks for this #}
-                    <div style="color: white; display: table;">
-                        <div style="display: table-cell; vertical-align: middle;">
-                            &nbsp;XML&nbsp;
-                        </div>
-                        <div style="display: table-cell; vertical-align: middle;">
-                            <label class="switch">
-                                <input type="checkbox" id="jsonswitch">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                        <div style="display: table-cell; vertical-align: middle;">
-                            &nbsp;JSON&nbsp;&nbsp;
-                        </div>
-                    </div>
-                </li>
+{#                    <div style="color: white; display: table;">#}
+{#                        <div style="display: table-cell; vertical-align: middle;">#}
+{#                            &nbsp;XML&nbsp;#}
+{#                        </div>#}
+{#                        <div style="display: table-cell; vertical-align: middle;">#}
+{#                            <label class="switch">#}
+{#                                <input type="checkbox" id="jsonswitch">#}
+{#                                <span class="slider round"></span>#}
+{#                            </label>#}
+{#                        </div>#}
+{#                        <div style="display: table-cell; vertical-align: middle;">#}
+{#                            &nbsp;JSON&nbsp;&nbsp;#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </li>#}
                 {% if request.user.is_authenticated == 0 %}
                     <li class="nav-item active">
                         <a class="nav-link active" href="{% url 'web:login_user' %}"><i class="fa fa-power-off"></i>&nbsp; Log In</a>
