@@ -1,6 +1,9 @@
 # crm-sample
 A CRM database with Frontend  
 
+## Note
+This project is no longer developed. Please use the software at your own risk.
+
 A customer relationship management web application as mini project for Databases and Web Tech Courses of 5th Semester.  
 **Database**  MySQL  
 **Backend**   Django  
